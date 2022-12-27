@@ -15,5 +15,6 @@ executable appel
 
   default-language: Haskell2010
   build-depends:
+    , array  ^>=0.5.4
     , base   ^>=4.16.3.0
     , extra  ^>=1.7.12
