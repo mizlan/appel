@@ -6,12 +6,16 @@ module Main where
 %tokentype { Token }
 %error { parseError }
 
-%nonassoc then do
-%right ':='
+%right of
+%nonassoc then
+%nonassoc else
+%nonassoc do
+%nonassoc ':='
 %left '&' '|'
 %nonassoc '<' '<=' '>' '>=' '=' '<>'
 %left '+' '-'
 %left '*' '/'
+%left NEG
 
 %token
       while      { While }
@@ -90,8 +94,12 @@ fundec : function ident '(' tyfields ')' '=' exp           {}
        | function ident '(' tyfields ')' ':' ident '=' exp {}
 
 lvalue : ident              {}
-       | lvalue '.' ident   {}
-       | lvalue '[' exp ']' {}
+       | lvaluei            {}
+
+lvaluei : ident '.' ident     {}
+        | lvaluei '.' ident   {}
+        | ident '[' exp ']'   {}
+        | lvaluei '[' exp ']' {}
 
 expmany : {- empty -}     {}
         | expmany ',' exp {}
@@ -116,7 +124,7 @@ exp : str                                {}
     | for ident ':=' exp to exp do exp   {}
     | break                              {}
     | let decs in exp end                {}
-    | '-' exp                            {}
+    | '-' exp %prec NEG                  {}
     | exp '+' exp                        {}
     | exp '-' exp                        {}
     | exp '*' exp                        {}
