@@ -1,11 +1,11 @@
 {
 module Pup.Parser where
 
-import Pup.Lexer
+import qualified Pup.Lexer as L
 }
 
 %name parse
-%tokentype { Token }
+%tokentype { L.Token }
 %error { parseError }
 
 %right of
@@ -20,49 +20,49 @@ import Pup.Lexer
 %left NEG
 
 %token
-      while      { While }
-      for        { For }
-      to         { To }
-      break      { Break }
-      let        { Let }
-      in         { In }
-      end        { End }
-      function   { Function }
-      var        { Var }
-      type       { Type }
-      array      { Array }
-      if         { If }
-      then       { Then }
-      else       { Else }
-      do         { Do }
-      of         { Of }
-      nil        { Nil }
-      ','        { Comma }
-      ':'        { Colon }
-      ';'        { Semicolon }
-      '('        { LParen }
-      ')'        { RParen }
-      '['        { LBracket }
-      ']'        { RBracket }
-      '{'        { LBrace }
-      '}'        { RBrace }
-      '.'        { Dot }
-      '+'        { Plus }
-      '-'        { Minus }
-      '*'        { Star }
-      '/'        { Slash }
-      '='        { Equals }
-      '<>'       { Neq }
-      '<'        { Less }
-      '<='       { LessEq }
-      '>'        { Greater }
-      '>='       { GreaterEq }
-      '&'        { And }
-      '|'        { Or }
-      ':='       { Assign }
-      int        { IntLit $$ }
-      str        { StringLit $$ }
-      ident      { Ident $$ }
+      while      { L.While }
+      for        { L.For }
+      to         { L.To }
+      break      { L.Break }
+      let        { L.Let }
+      in         { L.In }
+      end        { L.End }
+      function   { L.Function }
+      var        { L.Var }
+      type       { L.Type }
+      array      { L.Array }
+      if         { L.If }
+      then       { L.Then }
+      else       { L.Else }
+      do         { L.Do }
+      of         { L.Of }
+      nil        { L.Nil }
+      ','        { L.Comma }
+      ':'        { L.Colon }
+      ';'        { L.Semicolon }
+      '('        { L.LParen }
+      ')'        { L.RParen }
+      '['        { L.LBracket }
+      ']'        { L.RBracket }
+      '{'        { L.LBrace }
+      '}'        { L.RBrace }
+      '.'        { L.Dot }
+      '+'        { L.Plus }
+      '-'        { L.Minus }
+      '*'        { L.Star }
+      '/'        { L.Slash }
+      '='        { L.Equals }
+      '<>'       { L.Neq }
+      '<'        { L.Less }
+      '<='       { L.LessEq }
+      '>'        { L.Greater }
+      '>='       { L.GreaterEq }
+      '&'        { L.And }
+      '|'        { L.Or }
+      ':='       { L.Assign }
+      int        { L.IntLit $$ }
+      str        { L.StringLit $$ }
+      ident      { L.Ident $$ }
 
 %%
 
@@ -141,7 +141,24 @@ exp : str                                {}
     | exp '>=' exp                       {}
 
 {
-parseError :: [Token] -> a
+data Var = SimpleVar String
+         | FieldVar String Var
+         | SubscriptVar String Expr
+
+data Expr = VarExp Var
+          | NilExp
+          | IntExp
+          | StringExp String
+          | CallExp { func :: String, args :: [Expr] }
+          | OpExp { left :: Expr, op :: Op, right :: Expr }
+          | RecordExp { fields :: [(String, Expr)], typ :: String }
+          | SeqExp [Expr]
+          | AssignExp Var Expr
+          | IfExp { test :: Expr, doThen :: Expr, doElse :: Expr }
+          | WhileExp { test :: Expr, body :: Expr }
+          | ForExp { var :: Symbol, 
+
+parseError :: [L.Token] -> a
 parseError _ = error "Parse error"
 
 main = getContents >>= print . parse . alexScanTokens
