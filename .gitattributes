@@ -1,2 +1,3 @@
 *.x linguist-language=Haskell
-**/GEN* linguist-generated
+Pup/Lexer.hs linguist-generated
+Pup/Parser.hs linguist-generated
