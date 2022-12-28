@@ -6,6 +6,13 @@ module Main where
 %tokentype { Token }
 %error { parseError }
 
+%nonassoc then do
+%right ':='
+%left '&' '|'
+%nonassoc '<' '<=' '>' '>=' '=' '<>'
+%left '+' '-'
+%left '*' '/'
+
 %token
       while      { While }
       for        { For }
@@ -24,7 +31,7 @@ module Main where
       do         { Do }
       of         { Of }
       nil        { Nil }
-      comma      { Comma }
+      ','        { Comma }
       ':'        { Colon }
       ';'        { Semicolon }
       '('        { LParen }
@@ -55,6 +62,9 @@ module Main where
 
 program : exp              {}
 
+decs : {- empty -} {}
+     | decs dec    {}
+
 dec : tydec  {}
     | vardec {}
     | fundec {}
@@ -73,19 +83,49 @@ tyfield : ident ':' ident {}
 tyfields1 : tyfield               {}
           | tyfields1 ',' tyfield {}
 
+vardec : var ident ':=' exp           {}
+       | var ident ':' ident ':=' exp {}
+
 fundec : function ident '(' tyfields ')' '=' exp           {}
        | function ident '(' tyfields ')' ':' ident '=' exp {}
 
-exp : let decs in exp end  {}
-    | exp '+' exp          {}
-    | exp '-' exp          {}
-    | exp '*' exp          {}
-    | exp '/' exp          {}
-    | exp '=' exp          {}
-    | exp '&' exp          {}
-    | exp '|' exp          {}
-    | exp '<>' exp         {}
-    | exp '<' exp          {}
-    | exp '<=' exp         {}
-    | exp '>' exp          {}
-    | exp '>=' exp         {}
+lvalue : ident              {}
+       | lvalue '.' ident   {}
+       | lvalue '[' exp ']' {}
+
+expmany : {- empty -}     {}
+        | expmany ',' exp {}
+
+expseqi : exp ';' exp expseqii {}
+
+expseqii : {- empty -} {}
+         | ';' exp     {}
+
+exp : str                                {}
+    | int                                {}
+    | nil                                {}
+    | lvalue                             {}
+    | lvalue ':=' exp                    {}
+    | ident '(' expmany ')'              {}
+    | '(' expseqi ')'                    {}
+    | ident '{' tyfields '}'             {}
+    | ident '[' exp ']' of exp           {}
+    | if exp then exp                    {}
+    | if exp then exp else exp           {}
+    | while exp do exp                   {}
+    | for ident ':=' exp to exp do exp   {}
+    | break                              {}
+    | let decs in exp end                {}
+    | '-' exp                            {}
+    | exp '+' exp                        {}
+    | exp '-' exp                        {}
+    | exp '*' exp                        {}
+    | exp '/' exp                        {}
+    | exp '=' exp                        {}
+    | exp '&' exp                        {}
+    | exp '|' exp                        {}
+    | exp '<>' exp                       {}
+    | exp '<' exp                        {}
+    | exp '<=' exp                       {}
+    | exp '>' exp                        {}
+    | exp '>=' exp                       {}
