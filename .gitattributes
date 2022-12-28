@@ -1,1 +1,2 @@
 *.x linguist-language=Haskell
+**/GEN* linguist-generated
