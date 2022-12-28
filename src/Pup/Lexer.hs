@@ -1,7 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-unused-binds -fno-warn-missing-signatures #-}
 {-# LANGUAGE CPP #-}
 {-# LINE 1 "src/pup.x" #-}
-module Main where
+module Pup.Lexer where
 
 import Data.Char
 #if __GLASGOW_HASKELL__ >= 603

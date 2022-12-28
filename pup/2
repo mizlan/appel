@@ -1,0 +1,6 @@
+let var x := 4
+    function f(x: int, y: int): int = 2 * x + y + y
+    var z := f(3, x)
+in
+  f(z, z)
+end

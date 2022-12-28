@@ -1,5 +1,7 @@
 {-# OPTIONS_GHC -w #-}
-module Main where
+module Pup.Parser where
+
+import Pup.Lexer
 import qualified Data.Array as Happy_Data_Array
 import qualified Data.Bits as Bits
 import Control.Applicative(Applicative(..))
@@ -1794,7 +1796,10 @@ parse tks = happyRunIdentity happySomeParser where
 happySeq = happyDontSeq
 
 
+parseError :: [Token] -> a
+parseError _ = error "Parse error"
 
+main = getContents >>= print . parse . alexScanTokens
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 -- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
 

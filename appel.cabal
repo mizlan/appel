@@ -11,6 +11,8 @@ executable appel
   -- cabal-fmt: expand src -Main
   other-modules:
     Ch1Exercises
+    Pup.Lexer
+    Pup.Parser
     StraightLine
 
   default-language: Haskell2010

@@ -1,5 +1,5 @@
 {
-module Main where
+module Pup.Lexer where
 
 import Data.Char
 }

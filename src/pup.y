@@ -1,5 +1,7 @@
 {
-module Main where
+module Pup.Parser where
+
+import Pup.Lexer
 }
 
 %name parse
@@ -137,3 +139,10 @@ exp : str                                {}
     | exp '<=' exp                       {}
     | exp '>' exp                        {}
     | exp '>=' exp                       {}
+
+{
+parseError :: [Token] -> a
+parseError _ = error "Parse error"
+
+main = getContents >>= print . parse . alexScanTokens
+}
