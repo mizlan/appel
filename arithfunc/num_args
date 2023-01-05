@@ -1,0 +1,2 @@
+fun f(x, y) = x + y
+fun main() = f(3)

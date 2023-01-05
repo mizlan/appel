@@ -1,3 +1,5 @@
 *.x linguist-language=Haskell
 src/Pup/Lexer.hs linguist-generated
 src/Pup/Parser.hs linguist-generated
+src/ArithFunc/Lexer.hs linguist-generated
+src/ArithFunc/Parser.hs linguist-generated

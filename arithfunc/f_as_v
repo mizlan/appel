@@ -1,0 +1,2 @@
+fun g() = 3
+fun main() = g + 1
